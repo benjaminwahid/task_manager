@@ -57,6 +57,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                   itemBuilder: (context, index) {
                     return  TaskCard(taskStatus: TaskStatus.sNewTask,
                     taskModel: _newTaskList[index],
+                      refreshList: _getAllNewTaskList,
                     );
                   },
                   separatorBuilder: (context, index) => const Divider(
