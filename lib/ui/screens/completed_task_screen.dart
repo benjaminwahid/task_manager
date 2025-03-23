@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../widgets/task_card.dart';
 
 class CompletedTaskScreen extends StatefulWidget {
   const CompletedTaskScreen({super.key});
@@ -20,7 +19,7 @@ class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
                   primary: false,
                   shrinkWrap: true,
                   itemBuilder: (context, index){
-                  return const TaskCard(taskStatus: TaskStatus.completed,);
+                  //return const TaskCard(taskStatus: TaskStatus.completed,);
                   },
                   separatorBuilder: (context, index)=> const Divider(height: 8,) ),
 

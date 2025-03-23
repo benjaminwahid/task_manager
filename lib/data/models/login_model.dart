@@ -1,4 +1,4 @@
-import 'package:testproject/data/models/user_model.dart';
+import 'user_model.dart';
 
 class LoginModel {
   late final String status;

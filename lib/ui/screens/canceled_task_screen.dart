@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../widgets/task_card.dart';
 
 class CanceledTaskScreen extends StatefulWidget {
   const CanceledTaskScreen({super.key});
@@ -20,7 +19,7 @@ class _CanceledTaskScreenState extends State<CanceledTaskScreen> {
                   primary: false,
                   shrinkWrap: true,
                   itemBuilder: (context, index){
-                  return const TaskCard(taskStatus: TaskStatus.canceled,);
+                  //return const TaskCard(taskStatus: TaskStatus.canceled,);
                   },
                   separatorBuilder: (context, index)=> const Divider(height: 8,) ),
 

@@ -1,7 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:testproject/ui/widgets/screen_background.dart';
 
+
+import '../widgets/screen_background.dart';
 import 'login_screen.dart';
 
 class SetNewPassword extends StatefulWidget {

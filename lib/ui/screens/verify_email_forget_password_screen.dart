@@ -1,8 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:testproject/ui/screens/verify_pin_forget_password_screen.dart';
-import 'package:testproject/ui/widgets/screen_background.dart';
+import '../widgets/screen_background.dart';
 import 'login_screen.dart';
+import 'verify_pin_forget_password_screen.dart';
 
 class VarifyEmailForgotPassword extends StatefulWidget {
   const VarifyEmailForgotPassword({super.key});
