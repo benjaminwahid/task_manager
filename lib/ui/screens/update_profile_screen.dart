@@ -171,6 +171,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   void _onTapSubmitButton(){
     if (_formKey.currentState!.validate()){
       _updateProfile();
+
     }
   }
   Future<void> _updateProfile() async {
@@ -199,6 +200,22 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     if(response.isSuccess){
       _passwordTEController.clear();
       showSnackBarMessage(context, 'User data updated successfully');
+      AuthController.saveUserInformation(
+        AuthController.token.toString(),
+        UserModel.fromJson(response.data ?? requestBody),
+      );
+setState(() {
+
+});
+      if (mounted) {
+        Navigator.pop(context); // Close the current UpdateProfileScreen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const UpdateProfileScreen()),
+        );
+        showSnackBarMessage(context, 'User data updated successfully');
+      }
+
     }else{
       showSnackBarMessage(context, response.errorMessage, true);
     }
@@ -261,4 +278,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       setState(() {});
     }
   }
+
+
 }

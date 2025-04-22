@@ -33,16 +33,14 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
         selectedIndex: _selectedIndex,
         onDestinationSelected: (index){
           _selectedIndex = index;
-          setState(() {
-
-          });
+          setState(() {});
         },
         destinations: const [
 
-          NavigationDestination(icon: Icon(Icons.new_label), label: 'New Task'),
+          NavigationDestination(icon: Icon(Icons.new_label_outlined), label: 'New Task'),
           NavigationDestination(icon: Icon(Icons.change_circle_outlined), label: 'Progress'),
-          NavigationDestination(icon: Icon(Icons.done), label: 'Completed'),
-          NavigationDestination(icon: Icon(Icons.cancel_presentation), label: 'Canceled'),
+          NavigationDestination(icon: Icon(Icons.check_circle_outline), label: 'Completed'),
+          NavigationDestination(icon: Icon(Icons.cancel_outlined), label: 'Cancelled'),
         ],),
     );
   }

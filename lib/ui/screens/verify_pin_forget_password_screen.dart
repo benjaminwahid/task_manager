@@ -1,20 +1,24 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import '../../data/service/email_verify_and_otp_client.dart';
 import '../widgets/screen_background.dart';
 import 'login_screen.dart';
 import 'set_new_password_screen.dart';
 
-class VarifyPinForgotPassword extends StatefulWidget {
-  const VarifyPinForgotPassword({super.key});
+class VerifyPinForgotPassword extends StatefulWidget {
+  const VerifyPinForgotPassword({super.key});
 
   @override
-  State<VarifyPinForgotPassword> createState() => _VarifyPinForgotPasswordState();
+  State<VerifyPinForgotPassword> createState() => _VerifyPinForgotPasswordState();
 }
 
-class _VarifyPinForgotPasswordState extends State<VarifyPinForgotPassword> {
+class _VerifyPinForgotPasswordState extends State<VerifyPinForgotPassword> {
   final TextEditingController _pinCodeTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  Map<String, String> FormValues = {'otp':''};
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -55,13 +59,21 @@ class _VarifyPinForgotPasswordState extends State<VarifyPinForgotPassword> {
                    animationDuration: const Duration(milliseconds: 300),
                    backgroundColor: Colors.transparent,
                    enableActiveFill: true,
-                   controller: _pinCodeTEController,
-                   appContext: context
+                   // controller: _pinCodeTEController,
+                   appContext: context,
+                   onCompleted: (v){
+
+                   },
+                 onChanged: (value){
+                     InputOnChange("otp", value);
+                 },
                ),
 
                 const SizedBox(height: 16),
                 ElevatedButton(
-                  onPressed: _onTapSubmitButton,
+                  onPressed: (){
+                    FormOnSubmit();
+                  },
                   child: const Text('Verify'),
                 ),
                 const SizedBox(height: 32),
@@ -99,11 +111,32 @@ class _VarifyPinForgotPasswordState extends State<VarifyPinForgotPassword> {
     );
   }
 
-  void _onTapSubmitButton(){
-    Navigator.push(context, MaterialPageRoute(builder: (context)=> const SetNewPassword()));
-  }
+
   void _onTapSignInButton(){
     Navigator.push(context, MaterialPageRoute(builder: (context)=> const LoginScreen()));
+  }
+
+   InputOnChange(MapKey, TextValues) async {
+    setState(() {
+      FormValues.update(MapKey, (value) => TextValues);
+    });
+  }
+
+  FormOnSubmit() async{
+    if(FormValues['otp']!.length!=6){
+      ErrorToast('PIN Required !');
+    }
+    else{
+      setState(() {_isLoading=true;});
+      String? emailAddress=await ReadUserData('EmailVerification');
+      bool res=await VerifyOTPRequest(emailAddress,FormValues['otp']);
+      if(res==true){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=> const SetNewPassword()));
+      }
+      else{
+        setState(() {_isLoading=false;});
+      }
+    }
   }
 
   @override
@@ -111,4 +144,6 @@ class _VarifyPinForgotPasswordState extends State<VarifyPinForgotPassword> {
     _pinCodeTEController.dispose();
     super.dispose();
   }
+
+
 }

@@ -166,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => const VarifyEmailForgotPassword(),
+            builder: (context) => const VerifyEmailForgotPassword(),
         ),
     );
   }

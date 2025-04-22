@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:testproject/data/service/email_verify_and_otp_client.dart';
 
 
 import '../widgets/screen_background.dart';
@@ -17,6 +18,18 @@ class _SetNewPasswordState extends State<SetNewPassword> {
   final TextEditingController _confirmNewPasswordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isObscure = true;
+
+  Map<String, String>FormValues={'email':'', 'OTP':'','password':'', 'cpassword':''};
+  bool _isLoading = false;
+  
+  @override
+  void initState() {
+    getStoreData();
+    super.initState();
+  }
+  
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +52,9 @@ class _SetNewPasswordState extends State<SetNewPassword> {
                 TextFormField(
                   obscureText: _isObscure,
                   controller: _newPasswordTEController,
+                  onChanged: (Textvalue){
+                    InputOnChange('password', Textvalue);
+                  },
                   decoration: InputDecoration(
                       hintText: 'New Password',
                       suffixIcon: IconButton(
@@ -53,6 +69,9 @@ class _SetNewPasswordState extends State<SetNewPassword> {
                 ),TextFormField(
                   obscureText: _isObscure,
                   controller: _confirmNewPasswordTEController,
+                  onChanged: (Textvalue){
+                    InputOnChange('cpassword', Textvalue);
+                  },
                   decoration: InputDecoration(
                       hintText: 'Confirm New Password',
                       suffixIcon: IconButton(
@@ -67,7 +86,9 @@ class _SetNewPasswordState extends State<SetNewPassword> {
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(
-                  onPressed: _onTapSubmitButton,
+                  onPressed:() {
+                    FormOnSubmit();
+                    },
                   child: const Text('Confirm'),
                 ),
                 const SizedBox(height: 32),
@@ -105,9 +126,40 @@ class _SetNewPasswordState extends State<SetNewPassword> {
       ),
     );
   }
-  void _onTapSubmitButton(){
-    Navigator.push(context, MaterialPageRoute(builder: (context)=> const LoginScreen()));
+
+  getStoreData() async{
+    String? OTP = await ReadUserData("OTPVerification");
+    String? Email = await ReadUserData("EmailVerification");
+    InputOnChange('email', Email);
+    InputOnChange('OTP', OTP);
   }
+
+  InputOnChange(MapKey, Textvalue){
+    setState(() {
+      FormValues.update(MapKey, (value) => Textvalue);
+    });
+  }
+
+  FormOnSubmit() async{
+    if (FormValues['password']!.length==0){
+      ErrorToast('Password Required!');
+    }else if(FormValues['password'] != FormValues['cpassword']){
+     ErrorToast('Confirm password should be same');
+    }else{
+      setState(() {
+        _isLoading = true;
+      });
+      bool _reset = await SetPasswordRequest(FormValues);
+      if(_reset == true){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=> const LoginScreen()));
+      }else{
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
 
   void _onTapSignInButton(){
     Navigator.push(context, MaterialPageRoute(builder: (context)=> const LoginScreen()));

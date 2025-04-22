@@ -1,19 +1,38 @@
+import 'dart:convert';
+
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import '../../data/models/login_model.dart';
+import '../../data/service/email_verify_and_otp_client.dart';
+import '../../data/service/network_client.dart';
+import '../../data/utils/urls.dart';
+import '../controllers/auth_controller.dart';
 import '../widgets/screen_background.dart';
+import '../widgets/snack_bar_message.dart';
 import 'login_screen.dart';
+import 'main_bottom_nav_screen.dart';
 import 'verify_pin_forget_password_screen.dart';
 
-class VarifyEmailForgotPassword extends StatefulWidget {
-  const VarifyEmailForgotPassword({super.key});
+class VerifyEmailForgotPassword extends StatefulWidget {
+  const VerifyEmailForgotPassword({super.key});
 
   @override
-  State<VarifyEmailForgotPassword> createState() => _VarifyEmailForgotPasswordState();
+  State<VerifyEmailForgotPassword> createState() => _VerifyEmailForgotPasswordState();
 }
 
-class _VarifyEmailForgotPasswordState extends State<VarifyEmailForgotPassword> {
+class _VerifyEmailForgotPasswordState extends State<VerifyEmailForgotPassword> {
   final TextEditingController _emailTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
+  Map<String, String> FormValues = {"email":""};
+
+  InputOnChange(MapKey, Textvalue){
+    setState(() {
+      FormValues.update(MapKey, (value) => Textvalue);
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +47,7 @@ class _VarifyEmailForgotPasswordState extends State<VarifyEmailForgotPassword> {
               children: [
                 const SizedBox(height: 80),
                 Text(
-                  'Your Email Address',
+                  'Your email Address',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),const SizedBox(height: 4),
                 Text(
@@ -38,9 +57,12 @@ class _VarifyEmailForgotPasswordState extends State<VarifyEmailForgotPassword> {
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey),
                 ),
                 TextFormField(
+                  onChanged: (Textvalue){
+                  InputOnChange("email",Textvalue);},
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.emailAddress,
                   controller: _emailTEController,
+
                   decoration: const InputDecoration(
                     hintText: 'Email',
                   ),
@@ -48,7 +70,9 @@ class _VarifyEmailForgotPasswordState extends State<VarifyEmailForgotPassword> {
 
                 const SizedBox(height: 16),
                 ElevatedButton(
-                  onPressed: _onTapSubmitButton,
+                  onPressed: (){
+                    FormOnSubmit();
+                    },
                   child: const Icon(Icons.arrow_circle_right_outlined, color: Colors.white,),
                 ),
                 const SizedBox(height: 32),
@@ -87,9 +111,22 @@ class _VarifyEmailForgotPasswordState extends State<VarifyEmailForgotPassword> {
   }
 
 
-  void _onTapSubmitButton(){
-    Navigator.push(context, MaterialPageRoute(builder: (context)=> const VarifyPinForgotPassword()));
+  FormOnSubmit() async{
+    if(FormValues['email']!.length==0){
+      ErrorToast('Email Required !');
+    }
+    else{
+      setState((){_isLoading=true;});
+      bool res=await VerifyEmailRequest(FormValues['email']);
+      if(res==true){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=> const VerifyPinForgotPassword() ));
+      }
+      else{
+        setState(() {_isLoading=false;});
+      }
+    }
   }
+
 
   void _onTapSignInButton(){
     Navigator.push(context, MaterialPageRoute(builder: (context)=> const LoginScreen()));
