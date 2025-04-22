@@ -211,6 +211,7 @@ setState(() {
         Navigator.pop(context); // Close the current UpdateProfileScreen
         Navigator.pushReplacement(
           context,
+          //jj
           MaterialPageRoute(builder: (_) => const UpdateProfileScreen()),
         );
         showSnackBarMessage(context, 'User data updated successfully');
